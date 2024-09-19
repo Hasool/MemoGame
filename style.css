@@ -6,10 +6,17 @@ body{
 
 .nav{
     display: flex;
+    flex-direction: row-reverse;
     justify-content: space-between;
     padding: 10px 30px;
 }
 
+@media screen and (max-width: 480px){
+    .nav{
+        display: flex;
+        flex-direction: column-reverse;
+    }
+}
 
 .container{
     display: flex;
