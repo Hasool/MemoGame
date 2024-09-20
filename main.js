@@ -122,7 +122,7 @@ function cart(e) {
     }
 
     if (TrueDub===8) {
-        const TtoTrue = (seconds-5)/(Wrong+1)
+        const TtoTrue = (seconds-5)*(5-Wrong)
         document.getElementById("score").innerText=`last score : ${TtoTrue}`
         if(Hscore<TtoTrue){
             Hscore = TtoTrue
