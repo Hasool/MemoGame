@@ -143,6 +143,7 @@ function cart(e) {
         LastE = e.getAttribute('id'); 
     }
 
+<<<<<<< HEAD
     if (TrueDub === 8) {
         
         const TtoTrue = (seconds - 5) * (5 - Wrong);
@@ -151,6 +152,13 @@ function cart(e) {
        
         if (Hscore < TtoTrue) {
             Hscore = TtoTrue;
+=======
+    if (TrueDub===8) {
+        const TtoTrue = (seconds-5)*(5-Wrong)
+        document.getElementById("score").innerText=`last score : ${TtoTrue}`
+        if(Hscore<TtoTrue){
+            Hscore = TtoTrue
+>>>>>>> c7b8901ffbd8c5aaab2e9b0eaba359f0fd5a4d69
         }
 
         newG(); 
