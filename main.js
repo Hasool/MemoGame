@@ -11,7 +11,8 @@ const MemoCart = [
 
 const TheMemoContainer = document.getElementById('theMemoContainer');
 const newGameBtn = document.getElementById('newGameBtn');
-let double = [];
+let doubleCount = 0;
+let LastE 
 let timerInterval; 
 let seconds = 0;   
 let Wrong = 0;   
@@ -49,7 +50,7 @@ function newG() {
     `;
 
     startTimer(); 
-    double = []; 
+    doubleCount = 0; 
     Wrong = 0; 
     TrueDub = 0;
     document.getElementById('Hscore').innerText=`highest score : ${Hscore}`
@@ -77,7 +78,7 @@ function newG() {
     memo.sort((a, b) => a.number - b.number);
     let MemoContainer = '';
     for (let i = 0; i < memo.length; i++) {
-        MemoContainer += `<button type="button" class="OBtn" data-id="${memo[i].id}" onclick="cart(this)">
+        MemoContainer += `<button type="button" class="OBtn" id="${memo[i].id+i}" onclick="cart(this)">
                             <img src="${memo[i].src}" alt="${memo[i].id}">
                             <span class="OBox"></span>
                           </button>`;
@@ -93,43 +94,65 @@ newGameBtn.addEventListener('click', newG);
 function cart(e) {
     let span = e.querySelector('.OBox');
     let Wspan = e.querySelector('.OWrong');
-    
+
+    // Remove any existing feedback spans, if present
     if (span || Wspan) {
         e.removeChild(span || Wspan);
     }
 
-    let buttonId = e.getAttribute('data-id');
+    let buttonNew = e.innerHTML; // Store the current button's content
 
-    if (double.length === 1) {
-        if (double[0] === buttonId) {
-            console.log("yes");
-            TrueDub++;
-            double = [];
+    if (doubleCount > 0) { // If this is the second click in a pair
+        const lastOne = document.getElementById(LastE); // Get the last clicked button
+
+        if (lastOne && lastOne.innerHTML === buttonNew) { // Check if they match
+            TrueDub++; // Increment match count
+            doubleCount = 0;
+
+            // Disable click for both matched elements
+            e.onclick = null;
+            lastOne.onclick = null; // Properly disable lastOne click
+            LastE = ""; // Reset the last clicked button ID
         } else {
-            console.log("no");
-            e.innerHTML += `<span class="OWrong"></span>`;
+            e.innerHTML = buttonNew + `<span class="OWrong"></span>`;
+            lastOne.innerHTML += `<span class="OWrong"></span>`;
+
             Wrong++;
+
+
             document.getElementById(`${Wrong}`).src = "./public/wrong-true.svg";
-            document.getElementById(`${Wrong}`).className = "WT"
+            document.getElementById(`${Wrong}`).className = "WT";
+
+            
             if (Wrong >= 5) {
-                TrueDub=0;
+                TrueDub = 0;
                 newG();
             }
+
+            e.onclick = () => cart(e); 
+            lastOne.onclick = () => cart(lastOne);
+
+            doubleCount = 0;
+            LastE = ""; 
+
+            return; 
         }
     } else {
-        double.push(buttonId);
-        e.onclick = null; 
+        doubleCount = 1;
+        e.onclick = null;
+        LastE = e.getAttribute('id'); 
     }
 
-    if (TrueDub===8) {
-        const TtoTrue = (seconds-5)/(Wrong+1)
-        document.getElementById("score").innerText=`last score : ${TtoTrue}`
-        if(Hscore<TtoTrue){
-            Hscore = TtoTrue
+    if (TrueDub === 8) {
+        
+        const TtoTrue = (seconds - 5) * (5 - Wrong);
+        document.getElementById("score").innerText = `Last score: ${TtoTrue}`;
+
+       
+        if (Hscore < TtoTrue) {
+            Hscore = TtoTrue;
         }
-        newG()
+
+        newG(); 
     }
 }
-
-
-
